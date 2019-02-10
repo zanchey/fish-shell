@@ -13,7 +13,7 @@ steps:
 - script: cmake .
   displayName: 'CMake'
 
-- script: make -j VERBOSE=1
+- script: make -j2 VERBOSE=1
   displayName: 'Build'
 
 - script: make test
