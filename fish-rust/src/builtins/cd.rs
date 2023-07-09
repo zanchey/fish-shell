@@ -91,7 +91,7 @@ pub fn cd(parser: &mut parser_t, streams: &mut io_streams_t, args: &mut [&wstr])
         errno::set_errno(Errno(0));
 
         // We need to keep around the fd for this directory, in the parser.
-        let dir_fd = AutoCloseFd::new(wopen_cloexec(&norm_dir, O_RDONLY, 0));
+        let mut dir_fd = AutoCloseFd::new(wopen_cloexec(&norm_dir, O_RDONLY, 0));
 
         // Rust doesn't have library support for fchdir; set_current_dir could create a
         // race condition (but there's a race below anyway - perhaps not important)
@@ -119,11 +119,9 @@ pub fn cd(parser: &mut parser_t, streams: &mut io_streams_t, args: &mut [&wstr])
             break;
         }
 
-        // Port note: sending the AutocloseFd across the FFI interface requires additional work
-        // It's never actually used in the target parser object (perhaps will be after the port to Rust)
-        // Keep this commented until the parser is ported.
+        // Stash the fd for the cwd in the parser.
+        parser.pin().set_cwd_fd(autocxx::c_int(dir_fd.acquire()));
 
-        //parser.libdata().cwd_fd = std::make_shared<const autoclose_fd_t>(std::move(dir_fd));
         parser.pin().set_var_and_fire(
             &L!("PWD").to_ffi(),
             EnvMode::EXPORT.bits() | EnvMode::GLOBAL.bits(),
