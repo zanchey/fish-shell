@@ -427,6 +427,11 @@ wcstring parser_t::current_filename_ffi() const {
     }
 }
 
+void library_data_t::set_status_vars_ffi(wcstring command, wcstring commandline) {
+    this->status_vars.command = command;
+    this->status_vars.commandline = commandline;
+}
+
 bool parser_t::function_stack_is_overflowing() const {
     // We are interested in whether the count of functions on the stack exceeds
     // FISH_MAX_STACK_DEPTH. We don't separately track the number of functions, but we can have a

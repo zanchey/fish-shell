@@ -226,6 +226,7 @@ struct library_data_t : public library_data_pod_t {
     } status_vars;
 
    public:
+    void set_status_vars_ffi(wcstring command, wcstring commandline);
     wcstring get_status_vars_command() const { return status_vars.command; }
     wcstring get_status_vars_commandline() const { return status_vars.commandline; }
     const wcstring *get_current_filename() const;  // may return nullptr if None

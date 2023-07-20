@@ -75,9 +75,6 @@ struct builtin_data_t {
 #define BUILTIN_ERR_MISSING_SUBCMD _(L"%ls: missing subcommand\n")
 #define BUILTIN_ERR_INVALID_SUBCMD _(L"%ls: %ls: invalid subcommand\n")
 
-/// The send stuff to foreground message.
-#define FG_MSG _(L"Send job %d (%ls) to foreground\n")
-
 bool builtin_exists(const wcstring &cmd);
 
 proc_status_t builtin_run(parser_t &parser, const std::vector<wcstring> &argv,

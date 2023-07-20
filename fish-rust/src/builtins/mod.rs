@@ -12,6 +12,7 @@ pub mod count;
 pub mod echo;
 pub mod emit;
 pub mod exit;
+pub mod fg;
 pub mod function;
 pub mod functions;
 pub mod math;

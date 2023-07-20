@@ -141,6 +141,7 @@ include_cpp! {
     generate!("escape_code_length_ffi")
     generate!("reader_schedule_prompt_repaint")
     generate!("reader_change_history")
+    generate!("reader_write_title")
     generate!("history_session_id")
     generate!("reader_change_cursor_selection_mode")
     generate!("reader_set_autosuggestion_enabled_ffi")
