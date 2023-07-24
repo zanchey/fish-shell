@@ -55,6 +55,7 @@ mod parse_util;
 mod parser_keywords;
 mod path;
 mod print_help;
+mod proc;
 mod re;
 mod reader;
 mod redirection;
