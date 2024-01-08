@@ -136,9 +136,24 @@ add_definitions(-D_REENTRANT)
 # Set up PCRE2
 include(cmake/PCRE2.cmake)
 
+string(JOIN "," CURSES_LIBRARY_LIST ${CURSES_LIBRARY} ${CURSES_EXTRA_LIBRARY})
+
 # Define a function to link dependencies.
 function(FISH_LINK_DEPS_AND_SIGN target)
-  target_link_libraries(${target} fishlib)
+  # Tell Cargo where our build directory is so it can find config.h.
+  corrosion_set_env_vars(${target}
+      "FISH_BUILD_DIR=${fish_binary_dir}"
+      "PREFIX=${CMAKE_INSTALL_PREFIX}"
+      # Temporary hack to propogate CMake flags/options to build.rs.
+      "CMAKE_WITH_GETTEXT=${CMAKE_WITH_GETTEXT}"
+      "DOCDIR=${CMAKE_INSTALL_FULL_DOCDIR}"
+      "DATADIR=${CMAKE_INSTALL_FULL_DATADIR}"
+      "SYSCONFDIR=${CMAKE_INSTALL_FULL_SYSCONFDIR}"
+      "BINDIR=${CMAKE_INSTALL_FULL_BINDIR}"
+      "LOCALEDIR=${CMAKE_INSTALL_FULL_LOCALEDIR}"
+      "CURSES_LIBRARY_LIST=${CURSES_LIBRARY_LIST}"
+  )
+  corrosion_link_libraries(${target} fishlib)
   codesign_on_mac(${target})
 endfunction(FISH_LINK_DEPS_AND_SIGN)
 
@@ -146,25 +161,18 @@ endfunction(FISH_LINK_DEPS_AND_SIGN)
 add_library(fishlib STATIC ${FISH_SRCS})
 target_sources(fishlib PRIVATE ${FISH_HEADERS})
 target_link_libraries(fishlib
-  fish-rust
   ${CURSES_LIBRARY} ${CURSES_EXTRA_LIBRARY} Threads::Threads ${CMAKE_DL_LIBS}
-  ${PCRE2_LIB} ${Intl_LIBRARIES} ${ATOMIC_LIBRARY}
-  "fish-rust")
+  ${PCRE2_LIB} ${Intl_LIBRARIES} ${ATOMIC_LIBRARY})
 target_include_directories(fishlib PRIVATE
   ${CURSES_INCLUDE_DIRS})
 
 # Define fish.
-add_executable(fish src/fish.cpp)
 fish_link_deps_and_sign(fish)
 
 # Define fish_indent.
-add_executable(fish_indent
-               src/fish_indent.cpp)
 fish_link_deps_and_sign(fish_indent)
 
 # Define fish_key_reader.
-add_executable(fish_key_reader
-               src/fish_key_reader.cpp)
 fish_link_deps_and_sign(fish_key_reader)
 
 # Set up the docs.

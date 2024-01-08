@@ -163,7 +163,7 @@ endif()
 if(NOT DEFINED ASAN)
     add_test(
         NAME "cargo-test"
-        COMMAND cargo test ${CARGO_FLAGS} --package fish-rust --target-dir target ${cargo_target_opt}
+        COMMAND cargo test ${CARGO_FLAGS} --package fish --target-dir target ${cargo_target_opt}
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
     set_tests_properties("cargo-test" PROPERTIES SKIP_RETURN_CODE ${SKIP_RETURN_CODE})
