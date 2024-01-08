@@ -76,7 +76,7 @@ fn test_inotify_notifiers() {
     if temp_dir_ptr.is_null() {
         panic!("failed to create temp dir");
     }
-    let fake_uvars_dir = charptr2wcstring(temp_dir_ptr);
+    let fake_uvars_dir = unsafe { charptr2wcstring(temp_dir_ptr) };
     let fake_uvars_path = fake_uvars_dir.clone() + "/fish_variables";
 
     let mut notifiers = Vec::new();

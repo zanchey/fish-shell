@@ -343,9 +343,9 @@ fn test_autoload() {
     }
 
     let mut t1 = "/tmp/fish_test_autoload.XXXXXX\0".as_bytes().to_vec();
-    let p1 = charptr2wcstring(unsafe { libc::mkdtemp(t1.as_mut_ptr().cast()) });
+    let p1 = unsafe { charptr2wcstring(libc::mkdtemp(t1.as_mut_ptr().cast())) };
     let mut t2 = "/tmp/fish_test_autoload.XXXXXX\0".as_bytes().to_vec();
-    let p2 = charptr2wcstring(unsafe { libc::mkdtemp(t2.as_mut_ptr().cast()) });
+    let p2 = unsafe { charptr2wcstring(libc::mkdtemp(t2.as_mut_ptr().cast())) };
 
     let paths = &[p1.clone(), p2.clone()];
     let mut autoload = Autoload::new("test_var"L);

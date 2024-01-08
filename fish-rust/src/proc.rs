@@ -1049,7 +1049,7 @@ impl Job {
                 let strsignal = if strsignal.is_null() {
                     L!("(nil)").to_owned()
                 } else {
-                    charptr2wcstring(strsignal)
+                    unsafe { charptr2wcstring(strsignal) }
                 };
                 wperror(&sprintf!("killpg(%d, %s)", pgid, strsignal));
                 return false;

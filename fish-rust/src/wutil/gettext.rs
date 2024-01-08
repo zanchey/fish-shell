@@ -95,7 +95,7 @@ fn wgettext_impl(text: MaybeStatic) -> &'static wstr {
         None => {
             let mbs_in = wcs2zstring(key);
             let out = fish_gettext(&mbs_in);
-            let out = charptr2wcstring(out);
+            let out = unsafe { charptr2wcstring(out) };
             // Leak the value into the heap.
             let value: &'static wstr = Box::leak(out.into_boxed_utfstr());
 
