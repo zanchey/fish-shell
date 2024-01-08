@@ -1176,7 +1176,7 @@ fn expand_home_directory(input: &mut WString, vars: &dyn Environment) {
             )
         };
         if retval == 0 && !result.is_null() {
-            home = Some(charptr2wcstring(userinfo.pw_dir));
+            home = Some(unsafe { charptr2wcstring(userinfo.pw_dir) });
         }
     }
 

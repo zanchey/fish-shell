@@ -1177,7 +1177,7 @@ pub fn cstr2wcstring(input: &[u8]) -> WString {
     str2wcstring(&input[0..strlen])
 }
 
-pub fn charptr2wcstring(input: *const libc::c_char) -> WString {
+pub unsafe fn charptr2wcstring(input: *const libc::c_char) -> WString {
     let input: &[u8] = unsafe {
         let strlen = libc::strlen(input);
         slice::from_raw_parts(input.cast(), strlen)

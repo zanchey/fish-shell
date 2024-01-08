@@ -127,7 +127,7 @@ impl OwningNullTerminatedArray {
 }
 
 /// Return the length of a null-terminated array of pointers to something.
-pub fn null_terminated_array_length<T>(mut arr: *const *const T) -> usize {
+pub unsafe fn null_terminated_array_length<T>(mut arr: *const *const T) -> usize {
     let mut len = 0;
     // Safety: caller must ensure that arr is null-terminated.
     unsafe {
@@ -142,9 +142,9 @@ pub fn null_terminated_array_length<T>(mut arr: *const *const T) -> usize {
 #[test]
 fn test_null_terminated_array_length() {
     let arr = [&1, &2, &3, std::ptr::null()];
-    assert_eq!(null_terminated_array_length(arr.as_ptr()), 3);
+    assert_eq!(unsafe { null_terminated_array_length(arr.as_ptr()) }, 3);
     let arr: &[*const u64] = &[std::ptr::null()];
-    assert_eq!(null_terminated_array_length(arr.as_ptr()), 0);
+    assert_eq!(unsafe { null_terminated_array_length(arr.as_ptr()) }, 0);
 }
 
 #[test]

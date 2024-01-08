@@ -379,7 +379,7 @@ fn test_dir_iter() {
     let mut t1: [u8; 31] = *b"/tmp/fish_test_dir_iter.XXXXXX\0";
     let basepath_narrow = unsafe { libc::mkdtemp(t1.as_mut_ptr().cast()) };
     assert!(!basepath_narrow.is_null(), "mkdtemp failed");
-    let basepath: WString = charptr2wcstring(basepath_narrow);
+    let basepath: WString = unsafe { charptr2wcstring(basepath_narrow) };
 
     let makepath = |s: &str| -> CString {
         let mut tmp = basepath.clone();

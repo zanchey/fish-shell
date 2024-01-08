@@ -404,7 +404,7 @@ fn safe_launch_process(
         // Construct new argv.
         // We must not allocate memory, so only 128 args are supported.
         const maxargs: usize = 128;
-        let nargs = null_terminated_array_length(argv.get());
+        let nargs = unsafe { null_terminated_array_length(argv.get()) };
         let argv = unsafe { slice::from_raw_parts(argv.get(), nargs) };
         if nargs <= maxargs {
             // +1 for /bin/sh, +1 for terminating nullptr
@@ -421,7 +421,7 @@ fn safe_launch_process(
     }
 
     set_errno(err);
-    safe_report_exec_error(errno().0, actual_cmd.as_ptr(), argv.get(), envv.get());
+    unsafe { safe_report_exec_error(errno().0, actual_cmd.as_ptr(), argv.get(), envv.get()) };
     exit_without_destructors(exit_code_from_exec_error(err.0));
 }
 
@@ -716,15 +716,17 @@ fn fork_child_for_process(
         if let Some(pgid) = job.group().get_pgid() {
             let err = execute_setpgid(p.pid(), pgid, is_parent);
             if err != 0 {
-                report_setpgid_error(
-                    err,
-                    is_parent,
-                    p.pid(),
-                    pgid,
-                    job.job_id().as_num(),
-                    narrow_cmd.as_ptr(),
-                    narrow_argv0.as_ptr(),
-                );
+                unsafe {
+                    report_setpgid_error(
+                        err,
+                        is_parent,
+                        p.pid(),
+                        pgid,
+                        job.job_id().as_num(),
+                        narrow_cmd.as_ptr(),
+                        narrow_argv0.as_ptr(),
+                    )
+                };
             }
         }
     }
@@ -853,13 +855,15 @@ fn exec_external_command(
         let file = &parser.libdata().current_filename;
         let count = FORK_COUNT.fetch_add(1, Ordering::Relaxed) + 1; // spawn counts as a fork+exec
 
-        let pid = PosixSpawner::new(j, &dup2s).and_then(|mut spawner| {
+        let pid = PosixSpawner::new(j, &dup2s).and_then(|mut spawner| unsafe {
             spawner.spawn(actual_cmd.as_ptr(), argv.get_mut(), envv.get_mut())
         });
         let pid = match pid {
             Ok(pid) => pid,
             Err(err) => {
-                safe_report_exec_error(err.0, actual_cmd.as_ptr(), argv.get(), envv.get());
+                unsafe {
+                    safe_report_exec_error(err.0, actual_cmd.as_ptr(), argv.get(), envv.get())
+                };
                 p.status
                     .update(&ProcStatus::from_exit_code(exit_code_from_exec_error(
                         err.0,

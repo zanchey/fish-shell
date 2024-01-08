@@ -1740,8 +1740,10 @@ impl<'ctx> Completer<'ctx> {
                 if ptr.is_null() {
                     return None;
                 }
-                let pw = unsafe { ptr.read() };
-                Some(charptr2wcstring(pw.pw_name))
+                unsafe {
+                    let pw = ptr.read();
+                    Some(charptr2wcstring(pw.pw_name))
+                }
             }
 
             let _guard = s_setpwent_lock.lock().unwrap();
