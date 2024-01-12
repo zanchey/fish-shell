@@ -87,7 +87,7 @@ jobs:
         components: rust-src
     - name: Install deps
       run: |
-        sudo apt install gettext libncurses5-dev libpcre2-dev python3-pip tmux
+        sudo apt install gettext libncurses5-dev libpcre2-dev python3-pip tmux llvm-symbolizer
         # Don't install pexpect here because this constantly blows the time budget.
         # Try again once the rust port is done and we're hopefully not as slow anymore.
         # sudo pip3 install pexpect
@@ -95,7 +95,7 @@ jobs:
       env:
           CC: clang
           CXX: clang++
-          CXXFLAGS: "-fno-omit-frame-pointer -fsanitize=undefined -fsanitize=address -DFISH_CI_SAN"
+          CXXFLAGS: "-fno-omit-frame-pointer -g -fsanitize=undefined -fsanitize=address -DFISH_CI_SAN"
       run: |
         mkdir build && cd build
         # Rust's ASAN requires the build system to explicitly pass a --target triple. We read that
