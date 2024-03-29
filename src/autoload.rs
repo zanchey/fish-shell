@@ -317,7 +317,6 @@ impl AutoloadFileCache {
 }
 
 #[test]
-#[serial]
 fn test_autoload() {
     let _cleanup = test_init();
     use crate::common::{charptr2wcstring, wcs2zstring};

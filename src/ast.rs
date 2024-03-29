@@ -4010,7 +4010,6 @@ fn keyword_for_token(tok: TokenType, token: &wstr) -> ParseKeyword {
 }
 
 #[test]
-#[serial]
 fn test_ast_parse() {
     let _cleanup = test_init();
     let src = L!("echo");

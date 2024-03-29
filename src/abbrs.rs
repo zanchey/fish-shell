@@ -267,7 +267,6 @@ pub fn abbrs_match(token: &wstr, position: Position) -> Vec<Replacer> {
 }
 
 #[test]
-#[serial]
 fn rename_abbrs() {
     let _cleanup = test_init();
     use crate::abbrs::{Abbreviation, Position};

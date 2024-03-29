@@ -1828,7 +1828,6 @@ const TIME_IN_PIPELINE_ERR_MSG: &str =
 const var_err_len: usize = 16;
 
 #[test]
-#[serial]
 fn test_parse_util_cmdsubst_extent() {
     let _cleanup = test_init();
     const a: &wstr = L!("echo (echo (echo hi");
@@ -1847,7 +1846,6 @@ fn test_parse_util_cmdsubst_extent() {
 }
 
 #[test]
-#[serial]
 fn test_parse_util_slice_length() {
     let _cleanup = test_init();
     assert_eq!(parse_util_slice_length(L!("[2]")), Some(3));
@@ -1857,7 +1855,6 @@ fn test_parse_util_slice_length() {
 }
 
 #[test]
-#[serial]
 fn test_escape_quotes() {
     let _cleanup = test_init();
     macro_rules! validate {
@@ -1900,7 +1897,6 @@ fn test_escape_quotes() {
 }
 
 #[test]
-#[serial]
 fn test_indents() {
     let _cleanup = test_init();
     // A struct which is either text or a new indent.
