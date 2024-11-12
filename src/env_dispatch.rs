@@ -600,18 +600,6 @@ fn apply_non_term_hacks(vars: &EnvStack) {
 
 // Initialize the curses subsystem
 fn init_curses(vars: &EnvStack) {
-    for var_name in CURSES_VARIABLES {
-        if let Some(value) = vars
-            .getf_unless_empty(var_name, EnvMode::EXPORT)
-            .map(|v| v.as_string())
-        {
-            FLOG!(term_support, "curses var", var_name, "=", value);
-            setenv_lock(var_name, &value, true);
-        } else {
-            FLOG!(term_support, "curses var", var_name, "is missing or empty");
-            unsetenv_lock(var_name);
-        }
-    }
 
     if curses::setup(None, |term| apply_term_hacks(vars, term)).is_none() {
         if is_interactive_session() {
