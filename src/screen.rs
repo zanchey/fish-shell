@@ -23,7 +23,6 @@ use crate::common::{
     has_working_tty_timestamps, shell_modes, str2wcstring, wcs2string, write_loop, ScopeGuard,
     ScopeGuarding,
 };
-use crate::curses::{term, tparm0, tparm1};
 use crate::env::{Environment, TERM_HAS_XN};
 use crate::fallback::fish_wcwidth;
 use crate::flog::FLOGF;
@@ -33,6 +32,7 @@ use crate::global_safety::RelaxedAtomicBool;
 use crate::highlight::HighlightColorResolver;
 use crate::highlight::HighlightSpec;
 use crate::output::Outputter;
+use crate::term::{term, tparm0, tparm1};
 use crate::termsize::{termsize_last, Termsize};
 use crate::wchar::prelude::*;
 use crate::wcstringutil::string_prefixes_string;
@@ -1227,7 +1227,7 @@ pub struct LayoutCache {
 }
 
 // Singleton of the cached escape sequences seen in prompts and similar strings.
-// Note this is deliberately exported so that init_curses can clear it.
+// Note this is deliberately exported so that init_term can clear it.
 pub static LAYOUT_CACHE_SHARED: Mutex<LayoutCache> = Mutex::new(LayoutCache::new());
 
 impl LayoutCache {
